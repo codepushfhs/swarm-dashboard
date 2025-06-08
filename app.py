@@ -46,14 +46,22 @@ def get_node_hostname(node_id):
 @login_required
 def index():
     selected_node = request.args.get('node')
+    selected_stack = request.args.get('stack')
     services = client.services.list()
     stacks = {}
 
     nodes = [n for n in client.nodes.list() if n.attrs['Spec']['Role'] == 'worker']
     node_names = [n.attrs['Description']['Hostname'] for n in nodes]
 
+    stack_names = set()
+
     for service in services:
         stack_name = service.attrs['Spec']['Labels'].get('com.docker.stack.namespace', 'default')
+        stack_names.add(stack_name)
+
+        if selected_stack and stack_name != selected_stack:
+            continue
+
         service_name = service.name
         service_id = service.id
 
@@ -92,7 +100,14 @@ def index():
             'status_class': status_class
         })
 
-    return render_template('index.html', stacks=stacks, nodes=node_names, selected_node=selected_node)
+    return render_template(
+        'index.html',
+        stacks=stacks,
+        nodes=node_names,
+        selected_node=selected_node,
+        stack_names=sorted(stack_names),
+        selected_stack=selected_stack
+    )
 
 @app.route('/update_service', methods=['POST'])
 @login_required
@@ -110,7 +125,6 @@ def update_service():
         return render_template('message.html', message=f"✅ Service <strong>{service_name}</strong> updated successfully!")
     except Exception as e:
         return render_template('message.html', message=f"❌ Failed to update service: {e}")
-
 
 def get_running_task_id(service_name):
     try:
@@ -152,4 +166,3 @@ def logs(service_id):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-
