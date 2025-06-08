@@ -16,18 +16,29 @@
 </nav>
 
 <div class="container">
-    <!-- Dropdown chọn worker -->
+    <!-- Dropdown chọn stack -->
     <form method="get" class="mb-3">
-        <div class="input-group">
-            <label class="input-group-text" for="nodeSelect">Worker Node</label>
-            <select class="form-select" name="node" id="nodeSelect" onchange="this.form.submit()">
-                <option value="">-- All Nodes --</option>
-                {% for node in nodes %}
-                    <option value="{{ node }}" {% if selected_node == node %}selected{% endif %}>{{ node }}</option>
-                {% endfor %}
-            </select>
-        </div>
+      <div class="input-group mb-2">
+          <label class="input-group-text" for="stackSelect">Stack</label>
+          <select class="form-select" name="stack" id="stackSelect" onchange="this.form.submit()">
+              <option value="">-- All Stacks --</option>
+              {% for stack in stack_names %}
+                  <option value="{{ stack }}" {% if selected_stack == stack %}selected{% endif %}>{{ stack }}</option>
+              {% endfor %}
+          </select>
+      </div>
+
+      <div class="input-group">
+          <label class="input-group-text" for="nodeSelect">Worker Node</label>
+          <select class="form-select" name="node" id="nodeSelect" onchange="this.form.submit()">
+              <option value="">-- All Nodes --</option>
+              {% for node in nodes %}
+                  <option value="{{ node }}" {% if selected_node == node %}selected{% endif %}>{{ node }}</option>
+              {% endfor %}
+          </select>
+      </div>
     </form>
+
 
     {% for stack, services in stacks.items() %}
     <div class="card mb-4 shadow-sm">
@@ -82,4 +93,3 @@
 </div>
 </body>
 </html>
-
