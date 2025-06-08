@@ -1,6 +1,6 @@
-This is a small project using Python to manage services on Docker Swarm via a web UI.
+This is a small project using Python to manage Docker Swarm services through a web UI.
 
-The dashboard displays the services of each stack on each worker node, allows updating services, and shows service logs
+The dashboard displays the services of each stack on each worker node, the status and replicas of each service, allows updating services, and shows service logs.
 
 How to: 
 
