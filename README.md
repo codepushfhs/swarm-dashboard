@@ -1,4 +1,15 @@
+This is a small project using Python to manage services on Docker Swarm via a web UI.
+
+The dashboard displays the services of each stack on each worker node, allows updating services, and shows service logs
+
+How to: 
+
+Git clone repositorie
+
+Build image:
 
 docker build -t swarm-dashboard .
+
+Run image:
 
 docker run -d -p 5000:5000 -e DASHBOARD_USERNAME=admin -e DASHBOARD_PASSWORD=xxxx -v /var/run/docker.sock:/var/run/docker.sock --name swarm-dashboard swarm-dashboard
