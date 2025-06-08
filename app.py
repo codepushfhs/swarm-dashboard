@@ -56,6 +56,7 @@ def index():
         stack_name = service.attrs['Spec']['Labels'].get('com.docker.stack.namespace', 'default')
         service_name = service.name
         service_id = service.id
+
         all_tasks = service.tasks(filters={"desired-state": "running"})
 
         if selected_node:
@@ -65,11 +66,13 @@ def index():
             ]
         else:
             filtered_tasks = all_tasks
+
         running = sum(1 for t in filtered_tasks if t['Status']['State'] == 'running')
         total = len(filtered_tasks)
 
         if total == 0:
             continue
+
         if running == total:
             status_icon = "✅"
             status_class = "status-ok"
@@ -88,6 +91,7 @@ def index():
             'status_icon': status_icon,
             'status_class': status_class
         })
+
     return render_template('index.html', stacks=stacks, nodes=node_names, selected_node=selected_node)
 
 @app.route('/update_service', methods=['POST'])
@@ -99,12 +103,14 @@ def update_service():
 
     try:
         service = client.services.get(service_id)
+        service_name = service.name
         spec = service.attrs['Spec']
         current_force = spec['TaskTemplate'].get('ForceUpdate', 0)
         service.update(force_update=current_force + 1)
-        return render_template('message.html', message="✅ Service <strong>{service_name}</strong> updated successfully!")
+        return render_template('message.html', message=f"✅ Service <strong>{service_name}</strong> updated successfully!")
     except Exception as e:
         return render_template('message.html', message=f"❌ Failed to update service: {e}")
+
 
 def get_running_task_id(service_name):
     try:
@@ -146,3 +152,4 @@ def logs(service_id):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+

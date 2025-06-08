@@ -32,3 +32,4 @@ ENV FLASK_APP=app.py \
     FLASK_ENV=production
 EXPOSE 5000
 CMD ["flask", "run"]
+
