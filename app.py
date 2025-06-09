@@ -47,6 +47,9 @@ def get_node_hostname(node_id):
 def index():
     selected_node = request.args.get('node')
     selected_stack = request.args.get('stack')
+    selected_status = request.args.get('status')
+    search_query = request.args.get('search', '').strip().lower()
+
     services = client.services.list()
     stacks = {}
 
@@ -64,6 +67,9 @@ def index():
 
         service_name = service.name
         service_id = service.id
+
+        if search_query and search_query not in service_name.lower():
+            continue
 
         all_tasks = service.tasks(filters={"desired-state": "running"})
 
@@ -91,6 +97,14 @@ def index():
             status_icon = "❌"
             status_class = "status-fail"
 
+        if selected_status:
+            if selected_status == "ok" and status_class != "status-ok":
+                continue
+            elif selected_status == "warning" and status_class != "status-warning":
+                continue
+            elif selected_status == "fail" and status_class != "status-fail":
+                continue
+
         stacks.setdefault(stack_name, []).append({
             'name': service_name,
             'id': service_id,
@@ -106,7 +120,9 @@ def index():
         nodes=node_names,
         selected_node=selected_node,
         stack_names=sorted(stack_names),
-        selected_stack=selected_stack
+        selected_stack=selected_stack,
+        selected_status=selected_status,
+        search_query=search_query
     )
 
 @app.route('/update_service', methods=['POST'])
@@ -166,3 +182,4 @@ def logs(service_id):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+    
