@@ -9,6 +9,9 @@ The dashboard displays the services of each stack on each worker node, the statu
 ## How to:
 
 Git clone repository and run on management node of Docker Swarm cluster
+```
+mkdir flask_session_dir && chmod 777 flask_session_dir
+```
 
 ### Build image:
 ```
