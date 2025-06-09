@@ -145,13 +145,7 @@ def index():
 @app.route('/logout')
 @auth.oidc_logout
 def logout():
-    print(">>> Logging out and redirecting to:", url_for('index', _external=True))
-    return redirect(url_for('index'))
-
-#@app.route('/logout')
-#@auth.oidc_logout
-#def logout():
-#    return redirect(url_for('index'))
+    return redirect('/')
 
 @app.route('/update_service', methods=['POST'])
 @auth.oidc_auth('default')
@@ -210,4 +204,3 @@ def logs(service_id):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-    
