@@ -2,7 +2,7 @@
 
 This is a small project using Python to manage Docker Swarm services through a web UI.
 
-Authentication with SSO - Keycloak by OIDC protocol.
+Authentication with SSO - Keycloak by OIDC protocol (include Single Logout - SLO)
 
 The dashboard displays the services of each stack on each worker node, the status and replicas of each service, allows updating services, and shows service logs.
 
@@ -28,3 +28,10 @@ docker run -it -d -p 5000:5000 \
   --name swarm-dashboard \
   swarm-dashboard
 ```
+### Configuaration SSO - Keycloak:
+```
+ClientID: myrealm
+Valid redirect URIs:  http://localhost:5000/oidc_callback
+                      http://localhost:5000/*
+Valid post logout redirect URIs: http://localhost:5000/
+Web origins: *
